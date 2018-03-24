@@ -4,6 +4,7 @@ package clases;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -16,6 +17,7 @@ public class Consultas_Preparadas extends Conexion {
     
     private  PreparedStatement ps;
     private  ResultSet rs;
+    private Statement st;
     private static String _NONBRE;
     private static String  query="";
     private static Consultas_Preparadas consulta;
@@ -40,8 +42,8 @@ public class Consultas_Preparadas extends Conexion {
         Close();
         try {
             query = "SELECT * FROM "+tabla;
-            ps = Connect().prepareStatement(query);
-            rs = ps.executeQuery();
+            st = Connect().createStatement();
+            rs = st.executeQuery(query);
             
         } catch (SQLException ex) {
             
@@ -53,8 +55,8 @@ public class Consultas_Preparadas extends Conexion {
         Close();
         try {
             query = "SELECT * FROM "+tabla+" WHERE descripcion LIKE '%"+abc+"%'";
-            ps = Connect().prepareStatement(query);
-            rs = ps.executeQuery();
+            st = Connect().createStatement();
+            rs = st.executeQuery(query);
         } catch (SQLException ex) {
             Logger.getLogger(Consultas_Preparadas.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -65,8 +67,8 @@ public class Consultas_Preparadas extends Conexion {
         Object c = null;
         try {
             query = "SELECT "+Column_ID+" FROM "+tabla+"";
-            ps = Connect().prepareStatement(query);
-            rs = ps.executeQuery();
+            st = Connect().createStatement();
+            rs = st.executeQuery(query);
             
             while(rs.next()){
                  c = rs.getObject(1);
@@ -82,8 +84,8 @@ public class Consultas_Preparadas extends Conexion {
         Close();
         try {
             query = "SELECT "+Column+" FROM "+tabla+" ";
-            ps = Connect().prepareStatement(query);
-            rs = ps.executeQuery();
+            st = Connect().createStatement();
+            rs = st.executeQuery(query);
             return rs;
         } catch (SQLException ex) {
             Logger.getLogger(Consultas_Preparadas.class.getName()).log(Level.SEVERE, null, ex);
@@ -93,6 +95,29 @@ public class Consultas_Preparadas extends Conexion {
     }
     /////////////////////////////////////////////////////////////////////////////////////
     //CONSULTAS INSERT
+    public boolean insertTableInventario(String codigo, String descripcion, String tipo_Unidad, Double precio, int cantidad, String observacion){
+        
+        try {
+            query = "INSERT INTO inventario (codigo_pro , descripcion , tipo_unidad , precio , stock , observacion) VALUES (?,?,?,?,?,?) ";
+            ps = Connect().prepareStatement(query);
+            
+            ps.setString(1, codigo);
+            ps.setString(2, descripcion);
+            ps.setString(3, tipo_Unidad);
+            ps.setDouble(4, precio);
+            ps.setInt(5, cantidad);
+            ps.setString(6, observacion);
+            
+            ps.executeUpdate();
+            
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(Consultas_Preparadas.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error al insertar los datos --->"+ex.getMessage(),"error",0);
+        }
+        return false;
+    }
+    
     
     
     //CONSULTAS UPDATE

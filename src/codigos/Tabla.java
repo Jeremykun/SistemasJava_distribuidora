@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package clases;
+package codigos;
 
 import java.awt.Color;
 import java.sql.ResultSet;
