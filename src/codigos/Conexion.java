@@ -1,6 +1,6 @@
 
 
-package clases;
+package codigos;
 
 import java.sql.Connection;
 import java.sql.Driver;

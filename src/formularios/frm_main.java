@@ -24,21 +24,21 @@ public class frm_main extends javax.swing.JFrame  {
     Consultas_Preparadas consulta = Consultas_Preparadas.getInstance();
     //---------------------------------------->
     
-    DefaultTableModel model = new DefaultTableModel();
-         
+        
     
     public frm_main() {
         initComponents();
         this.setExtendedState(MAXIMIZED_BOTH);
         txtA_Observacion.setLineWrap(true);
-        
-        CargarTabla();
+        CargarTabla(consulta.selectALLTable("inventario"));
+        lbl_valor.setText(valor+"0");
         
     }
-    
-    private void CargarTabla(){
-        ResultSet rs ;
-        
+    private double valor;
+    private void CargarTabla(ResultSet rs2){
+        DefaultTableModel model = new DefaultTableModel();
+     
+        ResultSet rs = rs2;
         jt_principal.setModel(model);
         /*AGREGAMOS LAS COLUMNAS DE  LA TABLA*/
         model.addColumn("CODIGO_PRODUCTO");
@@ -57,7 +57,7 @@ public class frm_main extends javax.swing.JFrame  {
         jt_principal.getColumnModel().getColumn(5).setMaxWidth(200);
         
         /*consultamos la db*/
-        rs = consulta.selectALLTable("inventario");
+        //rs = consulta.selectALLTable("inventario");
         /*-----------------*/
         String tipo = "";
         try {
@@ -67,9 +67,16 @@ public class frm_main extends javax.swing.JFrame  {
                 v.add(rs.getString(3));
                 v.add(rs.getString(4));
                 v.add("S/ "+rs.getDouble(5));
+                
+                /*el valor del inventario*/
+                valor += rs.getDouble(5);
+                /*-----------------------*/
                 switch(rs.getString(4)){
                     case "PAQUETE":
                         tipo = "PQT";
+                        break;
+                    case "BOLSA":
+                        tipo = "BOL";
                         break;
                 }
                 v.add(rs.getInt(6)+" "+tipo);
@@ -104,7 +111,11 @@ public class frm_main extends javax.swing.JFrame  {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         txtA_Observacion = new javax.swing.JTextArea();
-        jTextField1 = new javax.swing.JTextField();
+        txt_busqueda = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        lbl_valor = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -220,7 +231,47 @@ public class frm_main extends javax.swing.JFrame  {
         txtA_Observacion.setWrapStyleWord(true);
         jScrollPane3.setViewportView(txtA_Observacion);
 
-        jTextField1.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        txt_busqueda.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        txt_busqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txt_busquedaKeyTyped(evt);
+            }
+        });
+
+        jLabel6.setFont(new java.awt.Font("Century Gothic", 3, 18)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(9, 205, 209));
+        jLabel6.setText("BUSCAR ARTICULO");
+
+        jPanel3.setBackground(new java.awt.Color(0, 102, 102));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "VALOR DEL INVENTARIO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Century Gothic", 3, 14), new java.awt.Color(9, 205, 209))); // NOI18N
+        jPanel3.setForeground(new java.awt.Color(0, 204, 153));
+
+        jLabel10.setBackground(new java.awt.Color(255, 51, 51));
+        jLabel10.setFont(new java.awt.Font("Century Gothic", 3, 24)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 51, 51));
+        jLabel10.setText("S/");
+
+        lbl_valor.setFont(new java.awt.Font("Century Gothic", 3, 18)); // NOI18N
+        lbl_valor.setForeground(new java.awt.Color(9, 205, 209));
+        lbl_valor.setText("9999.0000");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(12, Short.MAX_VALUE)
+                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lbl_valor, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel10)
+                .addComponent(lbl_valor, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -228,13 +279,16 @@ public class frm_main extends javax.swing.JFrame  {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(112, 112, 112)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 528, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 269, Short.MAX_VALUE)))
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(txt_busqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 528, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 140, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
@@ -249,9 +303,13 @@ public class frm_main extends javax.swing.JFrame  {
                         .addGap(32, 32, 32)
                         .addComponent(jScrollPane3))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap(91, Short.MAX_VALUE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addContainerGap(49, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txt_busqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(34, 34, 34)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -355,6 +413,11 @@ public class frm_main extends javax.swing.JFrame  {
         
     }//GEN-LAST:event_jt_principalMouseClicked
 
+    private void txt_busquedaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_busquedaKeyTyped
+        // TODO add your handling code here:
+        CargarTabla(consulta.busqueda_por_cada_Letra("inventario", txt_busqueda.getText()));
+    }//GEN-LAST:event_txt_busquedaKeyTyped
+
     /**
      * @param args the command line arguments
      */
@@ -402,26 +465,30 @@ public class frm_main extends javax.swing.JFrame  {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTable jt_principal;
+    private javax.swing.JLabel lbl_valor;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JTextArea txtA_Observacion;
+    private javax.swing.JTextField txt_busqueda;
     // End of variables declaration//GEN-END:variables
 
 }

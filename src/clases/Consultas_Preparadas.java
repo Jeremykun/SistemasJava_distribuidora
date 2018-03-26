@@ -45,6 +45,17 @@ public class Consultas_Preparadas extends Conexion {
     }
     
     
+    public synchronized ResultSet busqueda_por_cada_Letra(String tabla, String abc){
+        try {
+            query = "SELECT * FROM "+tabla+" WHERE descripcion LIKE '%"+abc+"%'";
+            ps = Connect().prepareStatement(query);
+            rs = ps.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(Consultas_Preparadas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
+    }
+    
     
     
     

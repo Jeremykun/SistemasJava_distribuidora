@@ -1,10 +1,11 @@
 
 
-package clases;
+package codigos;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
 import clases.Conexion;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -44,6 +45,10 @@ public class Consultas extends Conexion {
         return consulta;
     }
     
+    
+    private Connection Connet(){
+        return null;
+    }
     
     //INSERTAR LOS DATOS EN LA DB 
     public synchronized Boolean insert(String nombre,  String categoria, int cantidad,String precio){
