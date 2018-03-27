@@ -19,10 +19,11 @@ public class Consultas_Preparadas extends Conexion {
     private static String _NONBRE;
     private static String  query="";
     private static Consultas_Preparadas consulta;
+    
+    /*PATRON DE DISEÑO SINGLETON*/
     private Consultas_Preparadas(){
         
     }
-    
     public static Consultas_Preparadas getInstance(){
         if(consulta == null){
             consulta = new Consultas_Preparadas();
@@ -30,7 +31,11 @@ public class Consultas_Preparadas extends Conexion {
         return consulta;
     }
     
+    /*---------------------------*/
+    
+    
     /*SELECCIONAR TODA  LA TABLA*/
+    //CONSULTAS SELECT
     public synchronized ResultSet selectALLTable(String tabla){
         try {
             query = "SELECT * FROM "+tabla;
@@ -43,8 +48,6 @@ public class Consultas_Preparadas extends Conexion {
         }
         return rs;
     }
-    
-    
     public synchronized ResultSet busqueda_por_cada_Letra(String tabla, String abc){
         try {
             query = "SELECT * FROM "+tabla+" WHERE descripcion LIKE '%"+abc+"%'";
@@ -55,9 +58,6 @@ public class Consultas_Preparadas extends Conexion {
         }
         return rs;
     }
-    
-    
-    
     public synchronized int ultimo_ID(String tabla){
         int c = 1;
         try {
@@ -75,5 +75,29 @@ public class Consultas_Preparadas extends Conexion {
         
         return 0;
     }
+    public synchronized ResultSet selectColumn(String tabla, String Column){
+        
+        try {
+            query = "SELECT "+Column+" FROM "+tabla+" ";
+            ps = Connect().prepareStatement(query);
+            rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException ex) {
+            Logger.getLogger(Consultas_Preparadas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
+    }
+    /////////////////////////////////////////////////////////////////////////////////////
+    //CONSULTAS INSERT
+    
+    
+    //CONSULTAS UPDATE
+    
+    
+    //CONSULTAS DELETE
+    
+    
+    
     
 }

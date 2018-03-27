@@ -2,16 +2,21 @@
 package formularios;
 
 import clases.Consultas_Preparadas;
+import com.mxrck.autocompleter.TextAutoCompleter;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
+import org.jdesktop.swingx.autocomplete.*;
 
 /**
  * Numero de Contacto 968 078 803
@@ -24,14 +29,18 @@ public class frm_main extends javax.swing.JFrame  {
     Consultas_Preparadas consulta = Consultas_Preparadas.getInstance();
     //---------------------------------------->
     
-        
-    
+    String cadena = "";
+    boolean focus = false;
+   
     public frm_main() {
         initComponents();
         this.setExtendedState(MAXIMIZED_BOTH);
+        
         txtA_Observacion.setLineWrap(true);
         CargarTabla(consulta.selectALLTable("inventario"));
+        CargarCombo(consulta.selectColumn("inventario", "descripcion"));
         lbl_valor.setText(valor+"0");
+        
         
     }
     private double valor;
@@ -53,10 +62,10 @@ public class frm_main extends javax.swing.JFrame  {
         model.addColumn("OBSERVACIONES");
         /*-----------------------------------*/
         /*AGREGAMOS EL ANCHO DE CADA COLUMNA*/
-        jt_principal.getColumnModel().getColumn(0).setMaxWidth(150);
-        jt_principal.getColumnModel().getColumn(1).setMaxWidth(300);
-        jt_principal.getColumnModel().getColumn(2).setMaxWidth(150);
-        jt_principal.getColumnModel().getColumn(3).setMaxWidth(150);
+        jt_principal.getColumnModel().getColumn(0).setMaxWidth(120);
+        jt_principal.getColumnModel().getColumn(1).setMaxWidth(420);
+        jt_principal.getColumnModel().getColumn(2).setMaxWidth(100);
+        jt_principal.getColumnModel().getColumn(3).setMaxWidth(100);
         jt_principal.getColumnModel().getColumn(4).setMaxWidth(100);
         jt_principal.getColumnModel().getColumn(5).setMaxWidth(200);
         
@@ -70,11 +79,8 @@ public class frm_main extends javax.swing.JFrame  {
                 v.add(rs.getString(2));
                 v.add(rs.getString(3));
                 v.add(rs.getString(4));
-                v.add("S/ "+rs.getDouble(5));
+                v.add("S/ "+rs.getDouble(5)+"0");
                 
-                /*el valor del inventario*/
-                valor += rs.getDouble(5);
-                /*-----------------------*/
                 switch(rs.getString(4)){
                     case "PAQUETE":
                         tipo = "PQT";
@@ -84,6 +90,10 @@ public class frm_main extends javax.swing.JFrame  {
                         break;
                 }
                 v.add(rs.getInt(6)+" "+tipo);
+                /*el valor del inventario*/
+                valor += rs.getDouble(5) * rs.getInt(6);
+                /*-----------------------*/
+                
                 v.add(rs.getString(7));
                 model.addRow(v);
             }
@@ -92,7 +102,24 @@ public class frm_main extends javax.swing.JFrame  {
         }
         
     }
-    
+    private void CargarCombo(ResultSet rs2){
+        try {
+            
+            TextAutoCompleter txt_busco = new TextAutoCompleter(txt_busqueda);
+
+            ResultSet rs = rs2;
+            
+            while (rs.next()) {
+                //cbo_inventario.addItem(rs.getString(1));
+                txt_busco.addItem(rs.getString(1));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(frm_main.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error al cargar el combo box "+ex.getMessage(),"error de carga",0);
+        }
+      
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -100,8 +127,6 @@ public class frm_main extends javax.swing.JFrame  {
         desktopPane = new javax.swing.JDesktopPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jt_principal = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -113,12 +138,33 @@ public class frm_main extends javax.swing.JFrame  {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         txtA_Observacion = new javax.swing.JTextArea();
-        txt_busqueda = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         lbl_valor = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel5 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jt_principal = new javax.swing.JTable();
+        txt_busqueda = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        cbo_inventario = new javax.swing.JComboBox<>();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        jSpinner1 = new javax.swing.JSpinner();
+        jPanel7 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -142,52 +188,6 @@ public class frm_main extends javax.swing.JFrame  {
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
         jPanel2.setBackground(new java.awt.Color(0, 102, 102));
-
-        jt_principal.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
-            },
-            new String [] {
-                "CODIGO DE ARTICULO", "DESCRIPCION", "UNIDAD_COMPRA", "PRECIO", "STOCK", "OBSERVACION"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jt_principal.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jt_principalMouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(jt_principal);
-        if (jt_principal.getColumnModel().getColumnCount() > 0) {
-            jt_principal.getColumnModel().getColumn(0).setMinWidth(50);
-            jt_principal.getColumnModel().getColumn(0).setPreferredWidth(150);
-            jt_principal.getColumnModel().getColumn(0).setMaxWidth(150);
-            jt_principal.getColumnModel().getColumn(1).setMinWidth(100);
-            jt_principal.getColumnModel().getColumn(1).setPreferredWidth(350);
-            jt_principal.getColumnModel().getColumn(1).setMaxWidth(350);
-            jt_principal.getColumnModel().getColumn(2).setMinWidth(50);
-            jt_principal.getColumnModel().getColumn(2).setPreferredWidth(100);
-            jt_principal.getColumnModel().getColumn(2).setMaxWidth(100);
-            jt_principal.getColumnModel().getColumn(3).setMinWidth(50);
-            jt_principal.getColumnModel().getColumn(3).setPreferredWidth(150);
-            jt_principal.getColumnModel().getColumn(3).setMaxWidth(150);
-            jt_principal.getColumnModel().getColumn(4).setMinWidth(50);
-            jt_principal.getColumnModel().getColumn(4).setPreferredWidth(100);
-            jt_principal.getColumnModel().getColumn(4).setMaxWidth(100);
-            jt_principal.getColumnModel().getColumn(5).setMinWidth(100);
-            jt_principal.getColumnModel().getColumn(5).setPreferredWidth(150);
-            jt_principal.getColumnModel().getColumn(5).setMaxWidth(150);
-        }
 
         jPanel4.setBackground(new java.awt.Color(9, 205, 209));
         jPanel4.setEnabled(false);
@@ -242,17 +242,6 @@ public class frm_main extends javax.swing.JFrame  {
         txtA_Observacion.setWrapStyleWord(true);
         jScrollPane3.setViewportView(txtA_Observacion);
 
-        txt_busqueda.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
-        txt_busqueda.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txt_busquedaKeyTyped(evt);
-            }
-        });
-
-        jLabel6.setFont(new java.awt.Font("Century Gothic", 3, 18)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(9, 205, 209));
-        jLabel6.setText("BUSCAR ARTICULO");
-
         jPanel3.setBackground(new java.awt.Color(0, 102, 102));
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "VALOR DEL INVENTARIO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Century Gothic", 3, 14), new java.awt.Color(9, 205, 209))); // NOI18N
         jPanel3.setForeground(new java.awt.Color(0, 204, 153));
@@ -286,6 +275,253 @@ public class frm_main extends javax.swing.JFrame  {
 
         jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/nombre.png"))); // NOI18N
 
+        jTabbedPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        jTabbedPane1.setForeground(new java.awt.Color(0, 102, 102));
+        jTabbedPane1.setFont(new java.awt.Font("Century Gothic", 2, 24)); // NOI18N
+
+        jPanel5.setBackground(new java.awt.Color(0, 102, 102));
+        jPanel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        jt_principal.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jt_principal.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "CODIGO DE ARTICULO", "DESCRIPCION", "UNIDAD_COMPRA", "PRECIO", "STOCK", "OBSERVACION"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jt_principal.setRowHeight(28);
+        jt_principal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jt_principalMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jt_principal);
+        if (jt_principal.getColumnModel().getColumnCount() > 0) {
+            jt_principal.getColumnModel().getColumn(0).setMinWidth(50);
+            jt_principal.getColumnModel().getColumn(0).setPreferredWidth(150);
+            jt_principal.getColumnModel().getColumn(0).setMaxWidth(150);
+            jt_principal.getColumnModel().getColumn(1).setMinWidth(100);
+            jt_principal.getColumnModel().getColumn(1).setPreferredWidth(350);
+            jt_principal.getColumnModel().getColumn(1).setMaxWidth(350);
+            jt_principal.getColumnModel().getColumn(2).setMinWidth(50);
+            jt_principal.getColumnModel().getColumn(2).setPreferredWidth(100);
+            jt_principal.getColumnModel().getColumn(2).setMaxWidth(100);
+            jt_principal.getColumnModel().getColumn(3).setMinWidth(50);
+            jt_principal.getColumnModel().getColumn(3).setPreferredWidth(150);
+            jt_principal.getColumnModel().getColumn(3).setMaxWidth(150);
+            jt_principal.getColumnModel().getColumn(4).setMinWidth(50);
+            jt_principal.getColumnModel().getColumn(4).setPreferredWidth(100);
+            jt_principal.getColumnModel().getColumn(4).setMaxWidth(100);
+            jt_principal.getColumnModel().getColumn(5).setMinWidth(100);
+            jt_principal.getColumnModel().getColumn(5).setPreferredWidth(150);
+            jt_principal.getColumnModel().getColumn(5).setMaxWidth(150);
+        }
+
+        txt_busqueda.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        txt_busqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txt_busquedaKeyTyped(evt);
+            }
+        });
+
+        jLabel6.setFont(new java.awt.Font("Century Gothic", 3, 18)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel6.setText("BUSCAR ARTICULO");
+
+        cbo_inventario.setEditable(true);
+        cbo_inventario.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        cbo_inventario.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                cbo_inventarioFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cbo_inventarioFocusLost(evt);
+            }
+        });
+        cbo_inventario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                cbo_inventarioKeyTyped(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(txt_busqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(48, 48, 48)
+                .addComponent(cbo_inventario, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(207, Short.MAX_VALUE))
+            .addComponent(jScrollPane1)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_busqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbo_inventario, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("INVENTARIO", jPanel5);
+
+        jPanel6.setBackground(new java.awt.Color(0, 102, 102));
+        jPanel6.setFont(new java.awt.Font("Century Gothic", 2, 24)); // NOI18N
+
+        jLabel12.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel12.setText("DESCRIPCION:");
+
+        jLabel13.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel13.setText("CODIGO:");
+
+        jLabel14.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel14.setText("PRECIO:");
+
+        jLabel15.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel15.setText("UNIDAD DE COMPRA:");
+
+        jTextField1.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+
+        jTextField2.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+
+        jComboBox1.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jTextField3.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+
+        jLabel16.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel16.setText("STOCK:");
+
+        jSpinner1.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+
+        jPanel7.setBackground(new java.awt.Color(0, 102, 102));
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Observacion del articulo", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Century Gothic", 0, 14))); // NOI18N
+
+        jTextArea1.setBackground(java.awt.SystemColor.control);
+        jTextArea1.setColumns(20);
+        jTextArea1.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        jTextArea1.setForeground(new java.awt.Color(0, 102, 102));
+        jTextArea1.setRows(5);
+        jScrollPane2.setViewportView(jTextArea1);
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane4.setViewportView(jTable1);
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(43, 43, 43)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel15)
+                    .addComponent(jLabel14)
+                    .addComponent(jLabel16))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jSpinner1, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(387, 387, 387))
+            .addComponent(jScrollPane4)
+            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel6Layout.createSequentialGroup()
+                    .addGap(43, 43, 43)
+                    .addComponent(jLabel13)
+                    .addContainerGap(963, Short.MAX_VALUE)))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(38, 38, 38)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel12)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel15)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel14)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)))
+                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE))
+            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel6Layout.createSequentialGroup()
+                    .addGap(40, 40, 40)
+                    .addComponent(jLabel13)
+                    .addContainerGap(470, Short.MAX_VALUE)))
+        );
+
+        jTabbedPane1.addTab("REGISTRAR  ARTICULO", jPanel6);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -293,21 +529,15 @@ public class frm_main extends javax.swing.JFrame  {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(15, 15, 15)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(txt_busqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 528, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap(149, Short.MAX_VALUE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel11)
                         .addGap(76, 76, 76)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(77, 77, 77)))
+                        .addGap(77, 77, 77))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1063, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
@@ -317,7 +547,7 @@ public class frm_main extends javax.swing.JFrame  {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(32, 32, 32)
                         .addComponent(jScrollPane3))
@@ -328,12 +558,8 @@ public class frm_main extends javax.swing.JFrame  {
                                 .addGap(0, 12, Short.MAX_VALUE)
                                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txt_busqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(34, 34, 34)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 578, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -440,6 +666,16 @@ public class frm_main extends javax.swing.JFrame  {
     private void txt_busquedaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_busquedaKeyTyped
         // TODO add your handling code here:
         CargarTabla(consulta.busqueda_por_cada_Letra("inventario", txt_busqueda.getText()));
+        for (int i = 0; i < jt_principal.getRowCount(); i++) {
+            
+        }
+    }//GEN-LAST:event_txt_busquedaKeyTyped
+
+    private void cbo_inventarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbo_inventarioKeyTyped
+        // TODO add your handling code here:
+        System.out.println(cadena);
+        System.out.println("j");
+        CargarTabla(consulta.busqueda_por_cada_Letra("inventario",cadena));
         
         for (int i = 0; i < jt_principal.getRowCount(); i++) {
             String des = jt_principal.getValueAt(i, 1).toString();
@@ -448,9 +684,15 @@ public class frm_main extends javax.swing.JFrame  {
                 break;
             }
         }
-        //jt_principal.requestFocus();
-        
-    }//GEN-LAST:event_txt_busquedaKeyTyped
+    }//GEN-LAST:event_cbo_inventarioKeyTyped
+
+    private void cbo_inventarioFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbo_inventarioFocusGained
+
+    }//GEN-LAST:event_cbo_inventarioFocusGained
+
+    private void cbo_inventarioFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbo_inventarioFocusLost
+
+    }//GEN-LAST:event_cbo_inventarioFocusLost
 
     /**
      * @param args the command line arguments
@@ -463,7 +705,7 @@ public class frm_main extends javax.swing.JFrame  {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("windows".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -489,6 +731,7 @@ public class frm_main extends javax.swing.JFrame  {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JComboBox<String> cbo_inventario;
     private javax.swing.JMenuItem contentMenuItem;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem cutMenuItem;
@@ -498,9 +741,15 @@ public class frm_main extends javax.swing.JFrame  {
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -513,8 +762,20 @@ public class frm_main extends javax.swing.JFrame  {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JSpinner jSpinner1;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
     private javax.swing.JTable jt_principal;
     private javax.swing.JLabel lbl_valor;
     private javax.swing.JMenuBar menuBar;
