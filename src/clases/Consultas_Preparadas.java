@@ -58,5 +58,22 @@ public class Consultas_Preparadas extends Conexion {
     
     
     
+    public synchronized int ultimo_ID(String tabla){
+        int c = 1;
+        try {
+            query = "SELECT id_producto FROM "+tabla+"";
+            ps = Connect().prepareStatement(query);
+            rs = ps.executeQuery();
+            
+            while(rs.next()){
+                c = rs.getInt(0);
+            }
+            return c;
+        } catch (SQLException ex) {
+            Logger.getLogger(Consultas_Preparadas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return 0;
+    }
     
 }

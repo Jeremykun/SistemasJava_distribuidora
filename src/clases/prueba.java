@@ -19,23 +19,11 @@ public class prueba extends Conexion {
      */
     public static void main(String[] args) {
         
-        try {
-            String sql = "SELECT * FROM inventario";
-            Conexion con = new Conexion();
-            
-            PreparedStatement ps = con.Connect().prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            
-            while (rs.next()) {                
-                System.out.println(rs.getString("codigo_pro"));
-            }
-            
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(prueba.class.getName()).log(Level.SEVERE, null, ex);
+        String cadena = "hola mundo verga";
+        String parte = "ol";
+        if(cadena.contains(parte)){
+            System.out.println("encontrado");
         }
-               
-                
         
         
     }
