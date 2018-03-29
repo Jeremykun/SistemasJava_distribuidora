@@ -2,13 +2,17 @@
 package formularios;
 
 import clases.Consultas_Preparadas;
+import clases.Factura;
 import com.mxrck.autocompleter.TextAutoCompleter;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,8 +33,15 @@ public class frm_main extends javax.swing.JFrame  {
     Consultas_Preparadas consulta = Consultas_Preparadas.getInstance();
     //---------------------------------------->
     
+    
+    
+    /*VARIABLES*/
     String cadena = "";
     boolean focus = false;
+    boolean control = false;
+    ArrayList<Factura> factura  = new ArrayList<>();
+    
+    
    
     public frm_main() {
         initComponents();
@@ -120,6 +131,49 @@ public class frm_main extends javax.swing.JFrame  {
         }
       
     }
+    private void CargarTablaFactura(){
+        
+        DefaultTableModel model = new DefaultTableModel(){
+            public boolean isCellEditable(){
+                return false;
+            }
+        };
+        jt_factura.setModel(model);
+        model.addColumn("CODIGO_PRODUCTO");
+        model.addColumn("DESCRIPCION");
+        model.addColumn("PRECIO");
+        model.addColumn("CANTIDAD");
+        model.addColumn("IMPORTE");
+        
+        jt_factura.getColumnModel().getColumn(0).setMaxWidth(100);
+        jt_factura.getColumnModel().getColumn(1).setMaxWidth(150);
+        jt_factura.getColumnModel().getColumn(2).setMaxWidth(100);
+        jt_factura.getColumnModel().getColumn(3).setMaxWidth(100);
+        jt_factura.getColumnModel().getColumn(4).setMaxWidth(100);
+        
+        
+        Iterator<Factura>itrFactura = factura.iterator();
+        Double imp =0.0;
+        while(itrFactura.hasNext()){
+            Factura fact = itrFactura.next();
+            Vector v = new Vector();
+            v.add(fact.getCodigo());
+            v.add(fact.getDescripcion());
+            v.add(fact.getPrecio());
+            v.add(fact.getCantidad());
+            v.add(fact.getImporte());
+            imp += Double.parseDouble(fact.getImporte());
+            lbl_valorFactura.setText(""+imp);
+            model.addRow(v);
+        }
+        
+        txt_busqueda.setText("");
+        txt_busqueda.requestFocus();
+        
+        //CargarTabla(consulta.selectALLTable("inventario"));
+        
+        
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -150,11 +204,11 @@ public class frm_main extends javax.swing.JFrame  {
         jLabel6 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        jt_factura = new javax.swing.JTable();
         jTextField4 = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         btn_crearBoleta = new javax.swing.JButton();
-        lbl_valor1 = new javax.swing.JLabel();
+        lbl_valorFactura = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         lbl_idProduc = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
@@ -340,6 +394,9 @@ public class frm_main extends javax.swing.JFrame  {
 
         txt_busqueda.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         txt_busqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_busquedaKeyPressed(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txt_busquedaKeyTyped(evt);
             }
@@ -352,8 +409,8 @@ public class frm_main extends javax.swing.JFrame  {
         jPanel8.setBackground(new java.awt.Color(0, 102, 102));
         jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "FACTURACION", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Century Gothic", 0, 24), new java.awt.Color(51, 51, 51))); // NOI18N
 
-        jTable2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        jt_factura.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jt_factura.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -380,36 +437,41 @@ public class frm_main extends javax.swing.JFrame  {
                 return canEdit [columnIndex];
             }
         });
-        jTable2.setRowHeight(18);
-        jScrollPane5.setViewportView(jTable2);
-        if (jTable2.getColumnModel().getColumnCount() > 0) {
-            jTable2.getColumnModel().getColumn(0).setMinWidth(50);
-            jTable2.getColumnModel().getColumn(0).setPreferredWidth(100);
-            jTable2.getColumnModel().getColumn(0).setMaxWidth(100);
-            jTable2.getColumnModel().getColumn(1).setMinWidth(100);
-            jTable2.getColumnModel().getColumn(1).setPreferredWidth(150);
-            jTable2.getColumnModel().getColumn(1).setMaxWidth(150);
-            jTable2.getColumnModel().getColumn(2).setMinWidth(20);
-            jTable2.getColumnModel().getColumn(2).setPreferredWidth(100);
-            jTable2.getColumnModel().getColumn(2).setMaxWidth(100);
-            jTable2.getColumnModel().getColumn(3).setMinWidth(20);
-            jTable2.getColumnModel().getColumn(3).setPreferredWidth(100);
-            jTable2.getColumnModel().getColumn(3).setMaxWidth(100);
-            jTable2.getColumnModel().getColumn(4).setMinWidth(80);
-            jTable2.getColumnModel().getColumn(4).setPreferredWidth(120);
-            jTable2.getColumnModel().getColumn(4).setMaxWidth(120);
+        jt_factura.setRowHeight(18);
+        jScrollPane5.setViewportView(jt_factura);
+        if (jt_factura.getColumnModel().getColumnCount() > 0) {
+            jt_factura.getColumnModel().getColumn(0).setMinWidth(50);
+            jt_factura.getColumnModel().getColumn(0).setPreferredWidth(100);
+            jt_factura.getColumnModel().getColumn(0).setMaxWidth(100);
+            jt_factura.getColumnModel().getColumn(1).setMinWidth(100);
+            jt_factura.getColumnModel().getColumn(1).setPreferredWidth(150);
+            jt_factura.getColumnModel().getColumn(1).setMaxWidth(150);
+            jt_factura.getColumnModel().getColumn(2).setMinWidth(20);
+            jt_factura.getColumnModel().getColumn(2).setPreferredWidth(100);
+            jt_factura.getColumnModel().getColumn(2).setMaxWidth(100);
+            jt_factura.getColumnModel().getColumn(3).setMinWidth(20);
+            jt_factura.getColumnModel().getColumn(3).setPreferredWidth(100);
+            jt_factura.getColumnModel().getColumn(3).setMaxWidth(100);
+            jt_factura.getColumnModel().getColumn(4).setMinWidth(80);
+            jt_factura.getColumnModel().getColumn(4).setPreferredWidth(120);
+            jt_factura.getColumnModel().getColumn(4).setMaxWidth(120);
         }
 
         jLabel17.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         jLabel17.setForeground(new java.awt.Color(51, 51, 51));
-        jLabel17.setText("NOMBRE:");
+        jLabel17.setText("NOMBRE DEL CIENTE:");
 
         btn_crearBoleta.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         btn_crearBoleta.setText("CREAR BOLETA");
+        btn_crearBoleta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_crearBoletaActionPerformed(evt);
+            }
+        });
 
-        lbl_valor1.setFont(new java.awt.Font("Century Gothic", 3, 18)); // NOI18N
-        lbl_valor1.setForeground(new java.awt.Color(9, 205, 209));
-        lbl_valor1.setText("9999.0000");
+        lbl_valorFactura.setFont(new java.awt.Font("Century Gothic", 3, 18)); // NOI18N
+        lbl_valorFactura.setForeground(new java.awt.Color(9, 205, 209));
+        lbl_valorFactura.setText("9999.0000");
 
         jLabel18.setBackground(new java.awt.Color(255, 51, 51));
         jLabel18.setFont(new java.awt.Font("Century Gothic", 3, 24)); // NOI18N
@@ -420,38 +482,44 @@ public class frm_main extends javax.swing.JFrame  {
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel18)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_valor1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(181, 181, 181))
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
                         .addComponent(jLabel17)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btn_crearBoleta, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 574, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(97, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 574, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(48, 48, 48)
+                        .addComponent(btn_crearBoleta, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(86, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbl_valorFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(367, 367, 367))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                .addContainerGap(37, Short.MAX_VALUE)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_crearBoleta, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel18)
-                    .addComponent(lbl_valor1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17))
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbl_valorFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel18)))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGap(37, 37, 37)
+                        .addComponent(btn_crearBoleta)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         lbl_idProduc.setText("jLabel19");
@@ -488,7 +556,8 @@ public class frm_main extends javax.swing.JFrame  {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46))
         );
 
         jTabbedPane1.addTab("INVENTARIO", jPanel5);
@@ -619,12 +688,12 @@ public class frm_main extends javax.swing.JFrame  {
                             .addComponent(jSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)))
                     .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE))
             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel6Layout.createSequentialGroup()
                     .addGap(40, 40, 40)
                     .addComponent(jLabel13)
-                    .addContainerGap(578, Short.MAX_VALUE)))
+                    .addContainerGap(584, Short.MAX_VALUE)))
         );
 
         jTabbedPane1.addTab("REGISTRAR  ARTICULO", jPanel6);
@@ -746,7 +815,7 @@ public class frm_main extends javax.swing.JFrame  {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 742, Short.MAX_VALUE)
+            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 707, Short.MAX_VALUE)
         );
 
         pack();
@@ -775,6 +844,63 @@ public class frm_main extends javax.swing.JFrame  {
             }
         }
     }//GEN-LAST:event_txt_busquedaKeyTyped
+
+    private void btn_crearBoletaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_crearBoletaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_crearBoletaActionPerformed
+     
+     
+    private void txt_busquedaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_busquedaKeyPressed
+       if(evt.getExtendedKeyCode() == KeyEvent.VK_CONTROL ){
+            control = true;
+        }else{
+            if(control && evt.getExtendedKeyCode() == KeyEvent.VK_P){
+                //JOptionPane.showMessageDialog(null, "Control + p");
+                control = false;
+                /*se PRECIONO CONTROL + P */
+                
+                String cantidad = JOptionPane.showInputDialog(null, "Ingrese La cantidad " ,"Mensaje",0);
+                //System.out.println(cantidad);
+                Factura fact = new Factura();
+                for (int i = 0; i < jt_principal.getRowCount(); i++) {
+                    if(jt_principal.getValueAt(i, 0).equals(lbl_idProduc.getText())){
+                        
+                        //GUARDAMOS LA INFORMACION DEL ARTICULO ELEGIDO
+                        String codigo = jt_principal.getValueAt(i, 0).toString();
+                        String descripcion = jt_principal.getValueAt(i, 1).toString();
+                         
+                        String cadena_precio = jt_principal.getValueAt(i, 3).toString();
+                        String[] partes = cadena_precio.split(" ");
+                        String precio = partes[1];
+                        System.out.println(partes[1]);
+                        int cant = Integer.parseInt(cantidad);
+                        String importe =  ""+(cant * Double.parseDouble(precio));
+                        //JOptionPane.showMessageDialog(null, "valor "+ jt_principal.getValueAt(i, 0));
+                        //LLENAMOS LAS PROPIEDADES DE LA CLASE FACTURA
+                        fact.setCodigo(codigo);
+                        fact.setDescripcion(descripcion);
+                        fact.setPrecio(precio);
+                        fact.setCantidad(cant);
+                        fact.setImporte(importe);
+                        //AGREGAMOS LA FACTURA AL ARRAY LIST  EL ARRAYLIST DE NOMBRE FACTURA
+                        factura.add(fact);
+                        CargarTablaFactura();
+                        
+                        
+                    }
+                }
+                
+                
+                
+                
+                
+                
+                
+            }
+        }
+        
+        
+    }//GEN-LAST:event_txt_busquedaKeyPressed
 
     /**
      * @param args the command line arguments
@@ -858,16 +984,16 @@ public class frm_main extends javax.swing.JFrame  {
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JTable jt_factura;
     private javax.swing.JTable jt_principal;
     private javax.swing.JLabel lbl_idProduc;
     private javax.swing.JLabel lbl_valor;
-    private javax.swing.JLabel lbl_valor1;
+    private javax.swing.JLabel lbl_valorFactura;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pasteMenuItem;

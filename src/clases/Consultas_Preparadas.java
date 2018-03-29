@@ -37,6 +37,7 @@ public class Consultas_Preparadas extends Conexion {
     /*SELECCIONAR TODA  LA TABLA*/
     //CONSULTAS SELECT
     public synchronized ResultSet selectALLTable(String tabla){
+        Close();
         try {
             query = "SELECT * FROM "+tabla;
             ps = Connect().prepareStatement(query);
@@ -49,6 +50,7 @@ public class Consultas_Preparadas extends Conexion {
         return rs;
     }
     public synchronized ResultSet busqueda_por_cada_Letra(String tabla, String abc){
+        Close();
         try {
             query = "SELECT * FROM "+tabla+" WHERE descripcion LIKE '%"+abc+"%'";
             ps = Connect().prepareStatement(query);
@@ -58,25 +60,26 @@ public class Consultas_Preparadas extends Conexion {
         }
         return rs;
     }
-    public synchronized int ultimo_ID(String tabla){
-        int c = 1;
+    public synchronized Object ultimo_Elemento(String tabla,String Column_ID){
+        Close();
+        Object c = null;
         try {
-            query = "SELECT id_producto FROM "+tabla+"";
+            query = "SELECT "+Column_ID+" FROM "+tabla+"";
             ps = Connect().prepareStatement(query);
             rs = ps.executeQuery();
             
             while(rs.next()){
-                c = rs.getInt(0);
+                 c = rs.getObject(1);
             }
             return c;
         } catch (SQLException ex) {
             Logger.getLogger(Consultas_Preparadas.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return 0;
+        return null;
     }
     public synchronized ResultSet selectColumn(String tabla, String Column){
-        
+        Close();
         try {
             query = "SELECT "+Column+" FROM "+tabla+" ";
             ps = Connect().prepareStatement(query);
