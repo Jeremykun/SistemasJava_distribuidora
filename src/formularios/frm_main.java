@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import org.jdesktop.swingx.autocomplete.*;
@@ -50,7 +51,7 @@ public class frm_main extends javax.swing.JFrame  {
         buscar = new TextAutoCompleter(this.txt_busqueda);
    
         txtA_Observacion.setLineWrap(true);
-        CargarTabla(consulta.selectALLTable("inventario"));
+        CargarTabla(consulta.selectALLTable("inventario"),jt_principal);
         //CargarCombo(consulta.selectColumn("inventario", "descripcion"));
         lbl_valor.setText(valor+"0");
         
@@ -59,7 +60,8 @@ public class frm_main extends javax.swing.JFrame  {
     }
     ///////////////cagar tablas///////////////////
     private double valor;
-    private void CargarTabla(ResultSet rs2){
+    private void CargarTabla(ResultSet rs2,JTable t){
+        JTable tabla = t;
         DefaultTableModel model = new DefaultTableModel(){
             public boolean isCellEditable(int row , int colmun){
                 return false;
@@ -67,7 +69,7 @@ public class frm_main extends javax.swing.JFrame  {
         };
      
         ResultSet rs = rs2;
-        jt_principal.setModel(model);
+        tabla.setModel(model);
         /*AGREGAMOS LAS COLUMNAS DE  LA TABLA*/
         model.addColumn("CODIGO_PRODUCTO");
         model.addColumn("DESCRIPCION");
@@ -77,12 +79,12 @@ public class frm_main extends javax.swing.JFrame  {
         model.addColumn("OBSERVACIONES");
         /*-----------------------------------*/
         /*AGREGAMOS EL ANCHO DE CADA COLUMNA*/
-        jt_principal.getColumnModel().getColumn(0).setMaxWidth(120);
-        jt_principal.getColumnModel().getColumn(1).setMaxWidth(420);
-        jt_principal.getColumnModel().getColumn(2).setMaxWidth(100);
-        jt_principal.getColumnModel().getColumn(3).setMaxWidth(100);
-        jt_principal.getColumnModel().getColumn(4).setMaxWidth(100);
-        jt_principal.getColumnModel().getColumn(5).setMaxWidth(200);
+        tabla.getColumnModel().getColumn(0).setMaxWidth(120);
+        tabla.getColumnModel().getColumn(1).setMaxWidth(420);
+        tabla.getColumnModel().getColumn(2).setMaxWidth(100);
+        tabla.getColumnModel().getColumn(3).setMaxWidth(100);
+        tabla.getColumnModel().getColumn(4).setMaxWidth(100);
+        tabla.getColumnModel().getColumn(5).setMaxWidth(200);
         
         /*consultamos la db*/
         //rs = consulta.selectALLTable("inventario");
@@ -182,7 +184,7 @@ public class frm_main extends javax.swing.JFrame  {
     
     /////////ultimo codigo//////////////////
     private void UltimoCodigo(){
-         CargarTabla(consulta.selectALLTable("inventario"));
+         CargarTabla(consulta.selectALLTable("inventario"),jt_principal);
         CargarCombo(consulta.selectColumn("inventario", "descripcion"));
         
         String codigo = (String) consulta.ultimo_Elemento("inventario", "codigo_pro");
@@ -896,7 +898,7 @@ public class frm_main extends javax.swing.JFrame  {
 
     private void txt_busquedaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_busquedaKeyTyped
         // TODO add your handling code here:
-        CargarTabla(consulta.busqueda_por_cada_Letra("inventario", txt_busqueda.getText()));
+        CargarTabla(consulta.busqueda_por_cada_Letra("inventario", txt_busqueda.getText()),jt_principal);
         for (int i = 0; i < jt_principal.getRowCount(); i++) {
             if(jt_principal.getValueAt(i,1).equals(txt_busqueda.getText())){
                 lbl_idProduc.setText(jt_principal.getValueAt(i, 0).toString());
@@ -969,6 +971,8 @@ public class frm_main extends javax.swing.JFrame  {
         
         if(inserto){
             JOptionPane.showMessageDialog(null, "Los datos fueron ingresados correctamente","Mensaje",3);
+            CargarTabla(consulta.selectALLTable("inventario"),jt_registro);
+
         }
         UltimoCodigo();
     }//GEN-LAST:event_btn_insertDatosActionPerformed

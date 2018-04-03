@@ -26,7 +26,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Tabla {
     
-    public void ver_tabla(JTable tabla,ResultSet rs){
+    public synchronized void ver_tabla(JTable tabla,ResultSet rs){
         ResultSetMetaData rsmd;
         
         
